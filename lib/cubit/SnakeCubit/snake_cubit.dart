@@ -18,8 +18,9 @@ class SnakeCubit extends Cubit<SnakeState> {
   List<int> emptyPositions = [];
   int head = knumberOfColums + 3;
   String currentDirection = 'R';
+  int points = 0;
   int lastRow = -1;
-  int? foodPosition;
+  int foodPosition = 170;
 
   Timer? myTimer;
 
@@ -73,17 +74,22 @@ class SnakeCubit extends Cubit<SnakeState> {
     } else if (currentDirection == 'D') {
       head += knumberOfColums;
     }
-    snakePositions.add(head);
-    snakePositions.removeAt(0);
 
+    if (head == foodPosition) {
+      points++;
+      createTheFood();
+    } else {
+      snakePositions.removeAt(0);
+    }
     checkSnakePosition();
   }
 
   void checkSnakePosition() {
-    if (borderPositions.contains(head)) {
+    if (borderPositions.contains(head) || snakePositions.contains(head)) {
       myTimer?.cancel();
       emit(SnakeDead());
     } else {
+      snakePositions.add(head);
       emit(SnakeMove());
     }
   }
@@ -112,7 +118,9 @@ class SnakeCubit extends Cubit<SnakeState> {
     } else if (index == foodPosition) {
       return kFoodColor;
     } else {
-      emptyPositions.add(index);
+      if (!emptyPositions.contains(index)) {
+        emptyPositions.add(index);
+      }
       return kBackground;
     }
   }

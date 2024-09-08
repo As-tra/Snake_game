@@ -22,41 +22,64 @@ class _BoardViewBodyState extends State<BoardViewBody> {
   Widget build(BuildContext context) {
     return BlocBuilder<SnakeCubit, SnakeState>(
       builder: (context, state) {
-        return state is SnakeDead
-            ? const Center(
-                child: Text('Game  Over'),
-              )
-            : Stack(
-                children: [
-                  LayoutBuilder(builder: (context, constraints) {
-                    BlocProvider.of<SnakeCubit>(context).setBottomBorder(
-                      width: constraints.maxWidth,
-                      height: constraints.maxHeight,
-                    );
-                    return GridView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: knumberOfColums,
-                        mainAxisSpacing: 0.1,
-                        crossAxisSpacing: 0.1,
+        if (state is SnakeDead) {
+          return const Text("Game Over");
+        } else {
+          return Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                color: Colors.black,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Points : ${BlocProvider.of<SnakeCubit>(context).points}',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
                       ),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: BlocProvider.of<SnakeCubit>(context)
-                                .getColor(index),
-                          ),
-                        );
-                      },
-                    );
-                  }),
-                  const Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ControllerButtons(),
-                  ),
-                ],
-              );
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Stack(
+                  children: [
+                    LayoutBuilder(builder: (context, constraints) {
+                      BlocProvider.of<SnakeCubit>(context).setBottomBorder(
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight,
+                      );
+                      return GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: knumberOfColums,
+                          mainAxisSpacing: 0,
+                          crossAxisSpacing: 0,
+                        ),
+                        itemBuilder: (context, index) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: BlocProvider.of<SnakeCubit>(context)
+                                  .getColor(index),
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                    const Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ControllerButtons(),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        }
       },
     );
   }

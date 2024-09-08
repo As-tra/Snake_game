@@ -8,11 +8,11 @@ class BoardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocProvider(
-        create: (context) => SnakeCubit(),
-        child: const SafeArea(
-          child: BoardViewBody(),
+    return SafeArea(
+      child: Scaffold(
+        body: BlocProvider(
+          create: (context) => SnakeCubit(),
+          child: const BoardViewBody(),
         ),
       ),
     );
